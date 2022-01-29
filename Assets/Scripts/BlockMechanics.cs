@@ -169,9 +169,12 @@ public class BlockMechanics : MonoBehaviour
     {
         this.GetComponent<Rigidbody>().useGravity = false;
         this.GetComponent<Rigidbody>().constraints = ~(RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationZ);
+        
         this.transform.position = initialPosition;
         this.transform.rotation = Quaternion.identity;
+
         setInitialRotation(initialFlipCount);
+
         isMyTurn = false;
         rotateMe = false;
         isDoneJob = false;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6cc045881a43f449b5eb439c7bc6429, type: 3}
   m_Name: Game Settings
   m_EditorClassIdentifier: 
-  _playerSpeed: 4
+  _playerSpeed: 5
   _playerRewindSpeedMultiplier: 1
   _blockTimeLapse: 6
   _maxFlipCount: 4

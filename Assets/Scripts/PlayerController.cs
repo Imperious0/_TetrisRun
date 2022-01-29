@@ -13,43 +13,37 @@ public class PlayerController : MonoBehaviour
     private GameSettings gSettings;
 
 
-
     private Rigidbody pRigidbody;
-    [SerializeField]
+
     bool isGGWP = false;
     // Start is called before the first frame update
     void Start()
     {
 
         pRigidbody = this.GetComponent<Rigidbody>();
-        this.pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
-    }
-
-    private void FixedUpdate()
-    {
+        this.GGWP(false);
 
     }
     
     public void GGWP(bool isItReal) 
     {
-        this.pRigidbody.velocity = Vector3.zero;
+        if (!isItReal) 
+        {
+            this.pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
+        }
+        else 
+        {
+            this.pRigidbody.velocity = Vector3.zero;
+        }
         isGGWP = isItReal;
     }
 
     public void Respawn() 
     {
-
         this.transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position + new Vector3(-3, 2, 0);
         this.GetComponent<TrailRenderer>().Clear();
         respawnParticles.Play(false);
-        this.pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
-        isGGWP = false;
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-
-      
+        GGWP(false);
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -77,6 +71,7 @@ public class PlayerController : MonoBehaviour
             // GG WP
             Debug.LogError("GG WP");
             pRigidbody.velocity = Vector3.zero;
+            GGWP(true);
             // TODO
             Camera.main.GetComponent<GameController>().restartGame();
         }

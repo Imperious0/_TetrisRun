@@ -7,22 +7,29 @@ public class GameSettings : ScriptableObject
 {
     //General Settings
     [Header("Player Settings")]
+
     [Range(0f, 100f), SerializeField]
     float _playerSpeed = 1f;
+
     [Range(0.01f, 100f), SerializeField]
     float _playerRewindSpeedMultiplier = 1f;
 
     [Header("Block Settings")]
+
     [Range(0.01f, 10f), SerializeField]
     float _blockTimeLapse = 1f;
+
     [Range(1, 360), SerializeField]
     int _maxFlipCount = 1;
+
     [Range(0.01f, 100), SerializeField]
     float _blockForce = 50f;
 
     [Header("Game Settings")]
+
     [SerializeField]
     float _gamePlaySpeed = 1f;
+
     [Range(1, 100), SerializeField]
     int _gameMaxDifficulty = 1;
 

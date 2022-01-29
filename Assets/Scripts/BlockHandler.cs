@@ -6,10 +6,12 @@ public class BlockHandler : MonoBehaviour
 {
     [SerializeField]
     private GameObject block;
+
     [SerializeField]
     private float widthOfBlock = 3f;
 
     public float WidthOfBlock { get => widthOfBlock; }
+
 
     public void setMyTurn(bool isMyTurn) 
     {

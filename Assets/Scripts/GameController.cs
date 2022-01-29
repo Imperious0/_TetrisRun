@@ -20,22 +20,21 @@ public class GameController : MonoBehaviour
     int gameDifficulty = 1;
 
     int obstacleCount = 0;
-
     int obstacleCounter = 0;
 
     List<GameObject> obstacles;
+
     // Start is called before the first frame update
     void Start()
     {
+        //Recreate Sky color
         if (RenderSettings.skybox.HasProperty("_Tint"))
             RenderSettings.skybox.SetColor("_Tint", Random.ColorHSV(0.6f, 0.85f, 0.25f, 0.5f, 0.75f, 1f));
         else if (RenderSettings.skybox.HasProperty("_SkyTint"))
             RenderSettings.skybox.SetColor("_SkyTint", Random.ColorHSV(0.6f, 0.85f, 0.25f, 0.5f, 0.75f, 1f));
 
         gameDifficulty = Random.Range(1, gSettings.GameMaxDifficulty);
-
         obstacleCount = Random.Range(gameDifficulty * 5, gameDifficulty * 10);
-
         obstacles = new List<GameObject>();
 
         createObstacles();
@@ -71,10 +70,11 @@ public class GameController : MonoBehaviour
             }
         }
 
-
+        //Resize Bottom Road
         longRoad.transform.localScale = new Vector3(obstacleOffset + startPosition.x * 2f, 1f, 1f);
         longRoad.transform.position = new Vector3(longRoad.transform.localScale.x / 2f, 0, 0);
 
+        //Finish Platform Created
         GameObject finish = Instantiate(roadPrefab);
 
         Vector3 finishSetter = finish.transform.position;

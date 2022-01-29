@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2981574361675966332}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5495902117074765545, guid: d9fba47fee98dde49af28fcaeb31c2ec, type: 3}
 --- !u!23 &7544937415834296180
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -133,7 +133,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3969839746990115940}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5495902117074765545, guid: d9fba47fee98dde49af28fcaeb31c2ec, type: 3}
 --- !u!23 &2212351792984485176
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -226,7 +226,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4881636702371929045}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5495902117074765545, guid: d9fba47fee98dde49af28fcaeb31c2ec, type: 3}
 --- !u!23 &3316549015914476848
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -319,7 +319,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5632322611108856284}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5495902117074765545, guid: d9fba47fee98dde49af28fcaeb31c2ec, type: 3}
 --- !u!23 &8189924785547625304
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -423,6 +423,10 @@ MonoBehaviour:
   hitParticles: {fileID: 0}
   centre: {fileID: 9095580684249660115}
   gSettings: {fileID: 11400000, guid: 32b3c901e039fb24a80ca1194ec290f8, type: 2}
+  rotateMe: 0
+  isMyTurn: 0
+  isDoneJob: 0
+  isDoneByPlayer: 0
   isNeedToCheck: 0
 --- !u!54 &7966798004418965630
 Rigidbody:
