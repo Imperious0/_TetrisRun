@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 222fab32106568549bc707b9decef450
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - block: {instanceID: 0}
+  - merger: {instanceID: 0}
+  - gSettings: {fileID: 11400000, guid: 32b3c901e039fb24a80ca1194ec290f8, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

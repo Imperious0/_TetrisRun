@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6cc045881a43f449b5eb439c7bc6429, type: 3}
+  m_Name: Game Settings
+  m_EditorClassIdentifier: 
+  _playerSpeed: 4
+  _playerRewindSpeedMultiplier: 1
+  _blockTimeLapse: 6
+  _maxFlipCount: 4
+  _blockForce: 50
+  _gamePlaySpeed: 1
+  _gameMaxDifficulty: 5
