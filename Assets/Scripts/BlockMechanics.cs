@@ -30,13 +30,9 @@ public class BlockMechanics : MonoBehaviour
     float flipTriggerAngle;
 
     ///Logics
-    [SerializeField]
     private bool rotateMe = false;
-    [SerializeField]
     private bool isMyTurn = false;
-    [SerializeField]
     private bool isDoneJob = false;
-    [SerializeField]
     private bool isDoneByPlayer = false;
 
     //If True Block need to be in correct flip count
