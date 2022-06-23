@@ -1,2 +1,3 @@
 # _TetrisRun
- Tetris Runner Platform Game Demo
+Tetris Runner Platform Hypercasual Game Demo
+ 
