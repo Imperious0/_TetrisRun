@@ -1,21 +1,21 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class BlockMechanics : MonoBehaviour
 {
-
     [SerializeField]
     private ParticleSystem hitParticles;
-
-    [SerializeField]
-    private GameObject centre;
-
     [SerializeField]
     private GameSettings gSettings;
 
     //Mouse Events
     private MotionCapture mCapture;
+
+    [SerializeField]
+    private Rigidbody m_rigidBody;
+    [SerializeField]
+    private GameObject centre;
 
     //initial Values
     private Vector3 initialPosition = Vector3.zero;
@@ -26,7 +26,8 @@ public class BlockMechanics : MonoBehaviour
 
 
     //Used to calculate next flip rotation
-    float currentFlipAngle;
+    float currentTimelapse = 0f;
+    Quaternion oldRotation;
     float flipTriggerAngle;
 
     ///Logics
@@ -39,39 +40,22 @@ public class BlockMechanics : MonoBehaviour
     [SerializeField]
     private bool isNeedToCheck = true;
 
+    private void Awake()
+    {
+        m_rigidBody = GetComponent<Rigidbody>();
+        mCapture = Camera.main.GetComponent<MotionCapture>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         initialPosition = transform.position;
-        mCapture = Camera.main.GetComponent<MotionCapture>();
         flipTriggerAngle = 360f / gSettings.MaxFlipCount * 1f;
         setInitialRotation();
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
-    }
-    private void FixedUpdate()
-    {
-        if (rotateMe)
-        {
-            this.transform.RotateAround(this.centre.transform.position, Vector3.forward, gSettings.BlockTimeLapse);
-
-            currentFlipAngle = flipTriggerAngle - (this.transform.rotation.eulerAngles.z % flipTriggerAngle);
-
-            if (currentFlipAngle <= gSettings.BlockTimeLapse + 0.01f)
-            {
-                this.transform.RotateAround(this.centre.transform.position, Vector3.forward, currentFlipAngle);
-                flipCount++;
-                rotateMe = false;
-                checkBlockStatus();
-                return;
-            }
-            return;
-        }
-        if (isMyTurn && !isDoneJob)
+        if (isMyTurn && !isDoneJob && !rotateMe)
         {
             switch (mCapture.CurrentMotion)
             {
@@ -88,6 +72,28 @@ public class BlockMechanics : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (rotateMe)
+        {
+            currentTimelapse += Time.fixedDeltaTime * gSettings.BlockSpinSpeed;
+            float timelapse = Mathf.Lerp(0, 1, currentTimelapse);
+            Quaternion now = Quaternion.Lerp(oldRotation, Quaternion.Euler(Vector3.forward * flipTriggerAngle * (flipCount + 1)), timelapse);
+            this.transform.RotateAround(this.centre.transform.position, Vector3.forward, Quaternion.Angle(this.centre.transform.rotation, now));
+
+            if (currentTimelapse >= 1f)
+            {
+                flipCount++;
+                rotateMe = false;
+                currentTimelapse = 0f;
+                checkBlockStatus();
+                mCapture.resetMotion();
+                return;
+            }
+        }
+        
 
     }
     private void setInitialRotation(int initialFlip = -1) 
@@ -111,6 +117,8 @@ public class BlockMechanics : MonoBehaviour
     }
     void rotateBlock() 
     {
+        currentTimelapse = 0f;
+        oldRotation = transform.rotation;
         rotateMe = true;
     }
     public void setTurn(bool isTurn) 
@@ -126,7 +134,6 @@ public class BlockMechanics : MonoBehaviour
                 isKiller = true;
             else
                 isKiller = false;
-
         }
 
         return isKiller;
@@ -163,8 +170,8 @@ public class BlockMechanics : MonoBehaviour
     }
     public void resetBlock() 
     {
-        this.GetComponent<Rigidbody>().useGravity = false;
-        this.GetComponent<Rigidbody>().constraints = ~(RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationZ);
+        m_rigidBody.useGravity = false;
+        m_rigidBody.constraints = ~(RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationZ);
         
         this.transform.position = initialPosition;
         this.transform.rotation = Quaternion.identity;
@@ -183,13 +190,13 @@ public class BlockMechanics : MonoBehaviour
     private IEnumerator dieTieWorker()
     {
         Camera.main.GetComponent<CameraController>().ShakeIt();
-        this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-        this.GetComponent<Rigidbody>().useGravity = true;
-        this.GetComponent<Rigidbody>().AddForce(Vector3.down * gSettings.BlockForce, ForceMode.Impulse);
+        m_rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+        m_rigidBody.useGravity = true;
+        m_rigidBody.AddForce(Vector3.down * gSettings.BlockForce, ForceMode.Impulse);
         this.isMyTurn = false;
         this.isDoneJob = true;
-        yield return new WaitUntil(() => { return this.GetComponent<Rigidbody>().velocity.y < -0.1f; });
-        yield return new WaitUntil(() => { return this.GetComponent<Rigidbody>().velocity.y > -0.001f; });
+        yield return new WaitUntil(() => { return m_rigidBody.velocity.y < -0.1f; });
+        yield return new WaitUntil(() => { return m_rigidBody.velocity.y > -0.001f; });
         hitParticles.Play(true);
         // TODO
         if (!isBlocksKiller()) 

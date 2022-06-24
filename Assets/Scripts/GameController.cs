@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -27,6 +26,7 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Random.InitState(101104 + PlayerPrefs.GetInt("Level", 1)); 
         //Recreate Sky color
         if (RenderSettings.skybox.HasProperty("_Tint"))
             RenderSettings.skybox.SetColor("_Tint", Random.ColorHSV(0.6f, 0.85f, 0.25f, 0.5f, 0.75f, 1f));
@@ -113,12 +113,14 @@ public class GameController : MonoBehaviour
         {
             obstacles[i].GetComponent<BlockHandler>().resetBlock();
         }
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Respawn();
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Restart();
         this.GetComponent<MotionCapture>().resetMotion();
         sendNextBlock();
     }
     public void restartGame() 
     {
+        PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level", 1) + 1);
+        PlayerPrefs.Save();
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 }

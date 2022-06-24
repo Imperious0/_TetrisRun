@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "Game Settings", menuName = "Settings/Game Settings")]
 public class GameSettings : ScriptableObject
@@ -17,7 +15,7 @@ public class GameSettings : ScriptableObject
     [Header("Block Settings")]
 
     [Range(0.01f, 10f), SerializeField]
-    float _blockTimeLapse = 1f;
+    float _blockSpinSpeed = 1f;
 
     [Range(1, 360), SerializeField]
     int _maxFlipCount = 1;
@@ -34,7 +32,7 @@ public class GameSettings : ScriptableObject
     int _gameMaxDifficulty = 1;
 
     public float PlayerSpeed { get => _playerSpeed; }
-    public float BlockTimeLapse { get => _blockTimeLapse; }
+    public float BlockSpinSpeed { get => _blockSpinSpeed; }
     public float GamePlaySpeed { get => _gamePlaySpeed; }
     public int MaxFlipCount { get => _maxFlipCount; }
     public int GameMaxDifficulty { get => _gameMaxDifficulty; }

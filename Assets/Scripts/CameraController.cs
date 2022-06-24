@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -18,8 +17,6 @@ public class CameraController : MonoBehaviour
     private float _effectDuration = 1;
     [SerializeField]
     private AnimationCurve aCurve;
-
-    private bool _isStartShake = false;
 
 
     Vector3 startPosition = Vector3.zero;

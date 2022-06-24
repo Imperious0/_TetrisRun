@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -12,17 +12,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameSettings gSettings;
 
+    //Events
+    public EventHandler<endGameEventArgs> endGameEvent;
 
     private Rigidbody pRigidbody;
 
+    bool isGameEnd = false;
     bool isGGWP = false;
     // Start is called before the first frame update
     void Start()
     {
-
         pRigidbody = this.GetComponent<Rigidbody>();
-        this.GGWP(false);
 
+        if (PlayerPrefs.GetInt("IsFirstTimePlay", 1) != 1)
+        {
+            this.Respawn();
+        }
     }
     
     public void GGWP(bool isItReal) 
@@ -37,13 +42,19 @@ public class PlayerController : MonoBehaviour
         }
         isGGWP = isItReal;
     }
-
+    public void Restart()
+    {
+        if (!isGGWP && isGameEnd)
+            isGameEnd = false;
+        else
+            Respawn();
+    }
     public void Respawn() 
     {
         this.transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position + new Vector3(-3, 2, 0);
         this.GetComponent<TrailRenderer>().Clear();
-        respawnParticles.Play(false);
-        GGWP(false);
+        this.pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
+        isGameEnd = false;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -53,13 +64,17 @@ public class PlayerController : MonoBehaviour
             {
                 return;
             }
-            else 
+            else
             {
-                if (!isGGWP)
+                if (!isGGWP && !isGameEnd)
                 {
-                    GGWP(true);
+
                     Debug.LogError("GameOver");
+                    isGGWP = false;
+                    isGameEnd = true;
+                    pRigidbody.velocity = Vector3.zero;
                     StartCoroutine(dieAnimation());
+                    this.endGameEvent?.Invoke(this, new endGameEventArgs(false));
                 }
 
             }
@@ -71,9 +86,9 @@ public class PlayerController : MonoBehaviour
             // GG WP
             Debug.LogError("GG WP");
             pRigidbody.velocity = Vector3.zero;
-            GGWP(true);
-            // TODO
-            Camera.main.GetComponent<GameController>().restartGame();
+            isGGWP = true;
+            isGameEnd = true;
+            this.endGameEvent?.Invoke(this, new endGameEventArgs(true));
         }
     }
 
@@ -81,9 +96,8 @@ public class PlayerController : MonoBehaviour
     private IEnumerator dieAnimation() 
     {
         deadParticles.Play(false);
-
         //yield return new WaitUntil(() => { return !this.isGGWP; });
-        yield return new WaitForSeconds(2f);
+        yield return new WaitUntil(() => { return !isGameEnd; });
 
         float startTime = deadParticles.time;
         float simulationTime = startTime / deadParticles.main.simulationSpeed;
@@ -103,6 +117,17 @@ public class PlayerController : MonoBehaviour
         deadParticles.Play(false);
         deadParticles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
 
-        Camera.main.GetComponent<GameController>().resetGame();
+        this.transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position + new Vector3(-3, 2, 0);
+        this.GetComponent<TrailRenderer>().Clear();
+        this.pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
+    }
+    public class endGameEventArgs : EventArgs
+    {
+        bool isGameSuccess;
+        public endGameEventArgs(bool isGameSuccess)
+        {
+            this.isGameSuccess = isGameSuccess;
+        }
+        public bool IsGameSuccess { get => isGameSuccess; }
     }
 }

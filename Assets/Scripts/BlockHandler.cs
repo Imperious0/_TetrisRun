@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BlockHandler : MonoBehaviour
 {
@@ -11,7 +9,6 @@ public class BlockHandler : MonoBehaviour
     private float widthOfBlock = 3f;
 
     public float WidthOfBlock { get => widthOfBlock; }
-
 
     public void setMyTurn(bool isMyTurn) 
     {
@@ -29,7 +26,6 @@ public class BlockHandler : MonoBehaviour
             {
                 if(block.GetComponent<BlockMechanics>().isNaturalDeath())
                     block.GetComponent<BlockMechanics>().dieTie();
-               
             }
 
         }
