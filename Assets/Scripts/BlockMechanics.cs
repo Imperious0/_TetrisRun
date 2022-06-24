@@ -60,9 +60,11 @@ public class BlockMechanics : MonoBehaviour
             switch (mCapture.CurrentMotion)
             {
                 case Motions.Tap:
+                    MusicManager.Instance.SfxHandler.playClipSelf("Rotate");
                     rotateBlock();
                     break;
                 case Motions.Down:
+                    MusicManager.Instance.SfxHandler.playClipSelf("Slam");
                     isDoneJob = true;
                     isDoneByPlayer = true;
                     this.dieTie();

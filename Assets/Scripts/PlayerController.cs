@@ -30,18 +30,6 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    public void GGWP(bool isItReal) 
-    {
-        if (!isItReal) 
-        {
-            this.pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
-        }
-        else 
-        {
-            this.pRigidbody.velocity = Vector3.zero;
-        }
-        isGGWP = isItReal;
-    }
     public void Restart()
     {
         if (!isGGWP && isGameEnd)
@@ -74,6 +62,7 @@ public class PlayerController : MonoBehaviour
                     isGameEnd = true;
                     pRigidbody.velocity = Vector3.zero;
                     StartCoroutine(dieAnimation());
+                    MusicManager.Instance.SfxHandler.playClipSelf("Lose");
                     this.endGameEvent?.Invoke(this, new endGameEventArgs(false));
                 }
 
@@ -88,6 +77,7 @@ public class PlayerController : MonoBehaviour
             pRigidbody.velocity = Vector3.zero;
             isGGWP = true;
             isGameEnd = true;
+            MusicManager.Instance.SfxHandler.playClipSelf("Win");
             this.endGameEvent?.Invoke(this, new endGameEventArgs(true));
         }
     }

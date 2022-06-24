@@ -56,9 +56,9 @@ public class UIController : MonoBehaviour
     {
         gameStartUI.SetActive(false);
         endGameFailUI.SetActive(false);
-        Camera.main.GetComponent<GameController>().resetGame();
         PlayerPrefs.SetInt("IsFirstTimePlay", 0);
         PlayerPrefs.Save();
+        Camera.main.GetComponent<GameController>().resetGame();
 
     }
     public void startNextGame()
