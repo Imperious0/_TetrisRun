@@ -27,6 +27,50 @@ public class MotionCapture : MonoBehaviour
     }
     private void catchMotions() 
     {
+#if UNITY_IOS || UNITY_ANDROID || UNITY_WP_8_1
+        if (Input.touches.Length > 0)
+        {
+            Touch t = Input.GetTouch(0);
+
+            if (t.phase == TouchPhase.Began)
+            {
+                firstPressPos = new Vector2(t.position.x, t.position.y);
+            }
+
+            if (t.phase == TouchPhase.Ended)
+            {
+                secondPressPos = new Vector2(t.position.x, t.position.y);
+                currentSwipe = new Vector3(secondPressPos.x - firstPressPos.x, secondPressPos.y - firstPressPos.y);
+
+                // Make sure it was a legit swipe, not a tap
+                if (currentSwipe.magnitude < minSwipeLength)
+                {
+                    currentMotion = Motions.Tap;
+                    return;
+                }
+
+                currentSwipe.Normalize();
+
+                // Swipe up
+                if (currentSwipe.y > 0 && currentSwipe.x > -0.5f && currentSwipe.x < 0.5f) {
+                    currentMotion = Motions.Up;
+                } else if (currentSwipe.y < 0 && currentSwipe.x > -0.5f && currentSwipe.x < 0.5f) {
+                    // Swipe down
+                    currentMotion = Motions.Down;
+                } else if (currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f) {
+                    // Swipe left
+                    currentMotion = Motions.Left;
+                } else if (currentSwipe.x > 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f) {
+                    // Swipe right
+                    currentMotion = Motions.Right;
+                }
+            }
+        }
+        else
+        {
+            currentMotion = Motions.None;
+        }
+#else
         if (Input.GetMouseButtonDown(0))
         {
             firstPressPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -64,6 +108,7 @@ public class MotionCapture : MonoBehaviour
                 currentMotion = Motions.Right;
             }
         }
+#endif
 
     }
 
