@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour
     int obstacleCount = 0;
     int obstacleCounter = 0;
 
-    List<GameObject> obstacles;
+    List<BlockHandler> obstacles;
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
 
         gameDifficulty = Random.Range(1, gSettings.GameMaxDifficulty);
         obstacleCount = Random.Range(gameDifficulty * 5, gameDifficulty * 10);
-        obstacles = new List<GameObject>();
+        obstacles = new List<BlockHandler>();
 
         createObstacles();
 
@@ -53,12 +53,12 @@ public class GameController : MonoBehaviour
             obstacleOffset = createRoad(obstacleOffset);
             realCounter++;
 
-            obstacles.Add(Instantiate(obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)]));
+            obstacles.Add(Instantiate(obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)]).GetComponent<BlockHandler>());
 
             Vector3 obstacleSetter = obstacles[i].transform.position;
-            obstacleOffset += obstacles[i].GetComponent<BlockHandler>().WidthOfBlock / 2f;
+            obstacleOffset += obstacles[i].WidthOfBlock / 2f;
             obstacleSetter.x = startPosition.x + obstacleOffset;
-            obstacleOffset += obstacles[i].GetComponent<BlockHandler>().WidthOfBlock / 2f;
+            obstacleOffset += obstacles[i].WidthOfBlock / 2f;
 
             obstacles[i].transform.position = obstacleSetter;
             
@@ -102,7 +102,7 @@ public class GameController : MonoBehaviour
     {
         if(obstacleCounter < obstacleCount) 
         {
-            obstacles[obstacleCounter].GetComponent<BlockHandler>().setMyTurn(true);
+            obstacles[obstacleCounter].setMyTurn(true);
             obstacleCounter++;
         }
     }
@@ -111,10 +111,10 @@ public class GameController : MonoBehaviour
         obstacleCounter = 0;
         for (int i = 0; i < obstacleCount; i++) 
         {
-            obstacles[i].GetComponent<BlockHandler>().resetBlock();
+            obstacles[i].resetBlock();
         }
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Restart();
-        this.GetComponent<MotionCapture>().resetMotion();
+        GetComponent<MotionCapture>().resetMotion();
         sendNextBlock();
     }
     public void restartGame() 

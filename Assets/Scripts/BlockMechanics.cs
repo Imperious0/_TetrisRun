@@ -14,8 +14,12 @@ public class BlockMechanics : MonoBehaviour
 
     [SerializeField]
     private Rigidbody m_rigidBody;
+    private Transform m_Transform;
+
     [SerializeField]
     private GameObject centre;
+    private Transform centreTransform;
+
 
     //initial Values
     private Vector3 initialPosition = Vector3.zero;
@@ -42,14 +46,16 @@ public class BlockMechanics : MonoBehaviour
 
     private void Awake()
     {
+        m_Transform = transform;
         m_rigidBody = GetComponent<Rigidbody>();
+        centreTransform = centre.transform;
         mCapture = Camera.main.GetComponent<MotionCapture>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        initialPosition = transform.position;
+        initialPosition = m_Transform.position;
         flipTriggerAngle = 360f / gSettings.MaxFlipCount * 1f;
         setInitialRotation();
     }
@@ -67,7 +73,7 @@ public class BlockMechanics : MonoBehaviour
                     MusicManager.Instance.SfxHandler.playClipSelf("Slam");
                     isDoneJob = true;
                     isDoneByPlayer = true;
-                    this.dieTie();
+                    dieTie();
                     break;
                 default:
                     //None
@@ -83,7 +89,7 @@ public class BlockMechanics : MonoBehaviour
             currentTimelapse += Time.fixedDeltaTime * gSettings.BlockSpinSpeed;
             float timelapse = Mathf.Lerp(0, 1, currentTimelapse);
             Quaternion now = Quaternion.Lerp(oldRotation, Quaternion.Euler(Vector3.forward * flipTriggerAngle * (flipCount + 1)), timelapse);
-            this.transform.RotateAround(this.centre.transform.position, Vector3.forward, Quaternion.Angle(this.centre.transform.rotation, now));
+            m_Transform.RotateAround(centreTransform.position, Vector3.forward, Quaternion.Angle(centreTransform.rotation, now));
 
             if (currentTimelapse >= 1f)
             {
@@ -114,13 +120,13 @@ public class BlockMechanics : MonoBehaviour
 
         angleInDegrees *= flipCount;
 
-        this.transform.RotateAround(this.centre.transform.position, Vector3.forward, angleInDegrees);
+        m_Transform.RotateAround(centreTransform.position, Vector3.forward, angleInDegrees);
         checkBlockStatus();
     }
     void rotateBlock() 
     {
         currentTimelapse = 0f;
-        oldRotation = transform.rotation;
+        oldRotation = m_Transform.rotation;
         rotateMe = true;
     }
     public void setTurn(bool isTurn) 
@@ -147,7 +153,7 @@ public class BlockMechanics : MonoBehaviour
     void checkBlockStatus() 
     {
         flipCount %= gSettings.MaxFlipCount;
-        foreach (Renderer rend in this.GetComponentsInChildren<Renderer>())
+        foreach (Renderer rend in GetComponentsInChildren<Renderer>())
         {
 
             if (!isNeedToCheck) 
@@ -175,8 +181,8 @@ public class BlockMechanics : MonoBehaviour
         m_rigidBody.useGravity = false;
         m_rigidBody.constraints = ~(RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationZ);
         
-        this.transform.position = initialPosition;
-        this.transform.rotation = Quaternion.identity;
+        m_Transform.position = initialPosition;
+        m_Transform.rotation = Quaternion.identity;
 
         setInitialRotation(initialFlipCount);
 
@@ -195,8 +201,8 @@ public class BlockMechanics : MonoBehaviour
         m_rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         m_rigidBody.useGravity = true;
         m_rigidBody.AddForce(Vector3.down * gSettings.BlockForce, ForceMode.Impulse);
-        this.isMyTurn = false;
-        this.isDoneJob = true;
+        isMyTurn = false;
+        isDoneJob = true;
         yield return new WaitUntil(() => { return m_rigidBody.velocity.y < -0.1f; });
         yield return new WaitUntil(() => { return m_rigidBody.velocity.y > -0.001f; });
         hitParticles.Play(true);

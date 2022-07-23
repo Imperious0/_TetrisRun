@@ -16,17 +16,18 @@ public class PlayerController : MonoBehaviour
     public EventHandler<endGameEventArgs> endGameEvent;
 
     private Rigidbody pRigidbody;
+    private Transform pTransform;
 
     bool isGameEnd = false;
     bool isGGWP = false;
     // Start is called before the first frame update
     void Start()
     {
-        pRigidbody = this.GetComponent<Rigidbody>();
-
+        pRigidbody = GetComponent<Rigidbody>();
+        pTransform = transform;
         if (PlayerPrefs.GetInt("IsFirstTimePlay", 1) != 1)
         {
-            this.Respawn();
+            Respawn();
         }
     }
     
@@ -39,9 +40,9 @@ public class PlayerController : MonoBehaviour
     }
     public void Respawn() 
     {
-        this.transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position + new Vector3(-3, 2, 0);
-        this.GetComponent<TrailRenderer>().Clear();
-        this.pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
+        pTransform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position + new Vector3(-3, 2, 0);
+        GetComponent<TrailRenderer>().Clear();
+        pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
         isGameEnd = false;
     }
     private void OnTriggerEnter(Collider other)
@@ -63,7 +64,7 @@ public class PlayerController : MonoBehaviour
                     pRigidbody.velocity = Vector3.zero;
                     StartCoroutine(dieAnimation());
                     MusicManager.Instance.SfxHandler.playClipSelf("Lose");
-                    this.endGameEvent?.Invoke(this, new endGameEventArgs(false));
+                    endGameEvent?.Invoke(this, new endGameEventArgs(false));
                 }
 
             }
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour
             isGGWP = true;
             isGameEnd = true;
             MusicManager.Instance.SfxHandler.playClipSelf("Win");
-            this.endGameEvent?.Invoke(this, new endGameEventArgs(true));
+            endGameEvent?.Invoke(this, new endGameEventArgs(true));
         }
     }
 
@@ -86,7 +87,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator dieAnimation() 
     {
         deadParticles.Play(false);
-        //yield return new WaitUntil(() => { return !this.isGGWP; });
+        //yield return new WaitUntil(() => { return !isGGWP; });
         yield return new WaitUntil(() => { return !isGameEnd; });
 
         float startTime = deadParticles.time;
@@ -107,9 +108,9 @@ public class PlayerController : MonoBehaviour
         deadParticles.Play(false);
         deadParticles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
 
-        this.transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position + new Vector3(-3, 2, 0);
-        this.GetComponent<TrailRenderer>().Clear();
-        this.pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
+        pTransform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position + new Vector3(-3, 2, 0);
+        GetComponent<TrailRenderer>().Clear();
+        pRigidbody.AddForce(Vector3.right * gSettings.PlayerSpeed, ForceMode.Impulse);
     }
     public class endGameEventArgs : EventArgs
     {

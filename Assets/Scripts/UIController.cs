@@ -45,11 +45,11 @@ public class UIController : MonoBehaviour
     {
         if (e.IsGameSuccess)
         {
-            this.endGameUI.SetActive(true);
+            endGameUI.SetActive(true);
         }
         else
         {
-            this.endGameFailUI.SetActive(true);
+            endGameFailUI.SetActive(true);
         }
     }
     public void startGame()

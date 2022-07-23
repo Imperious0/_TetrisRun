@@ -16,8 +16,4 @@ public class AudioClipItem : IAudioClip
 
     public bool IsOneShot { get => _isOneShot; }
 
-    public AudioClipItem()
-    {
-
-    }
 }

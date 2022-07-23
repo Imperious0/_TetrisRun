@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    private Transform camTransfrom;
+
     [Header("Focus Settings")]
     [SerializeField]
     private Transform target;
@@ -25,10 +27,11 @@ public class CameraController : MonoBehaviour
     {
         if(pivot == null) 
         {
-            pivot = this.transform;
+            pivot = transform;
         }
+        camTransfrom = transform;
         pivot.position = target.position + offset;
-        startPosition = this.gameObject.transform.localPosition;
+        startPosition = camTransfrom.localPosition;
     }
 
     private void FixedUpdate()
@@ -48,16 +51,16 @@ public class CameraController : MonoBehaviour
     {
 
         float elapsedTime = 0f;
-
+        startPosition = camTransfrom.localPosition;
         while(elapsedTime < _effectDuration) 
         {
             elapsedTime += Time.deltaTime;
             float effectStrength = aCurve.Evaluate(elapsedTime / _effectDuration);
             Vector3 power = Random.insideUnitSphere * effectStrength;
             power = Vector3.Scale(power, Vector3.up);
-            transform.localPosition = startPosition + power;
+            camTransfrom.localPosition = startPosition + power;
             yield return new WaitForEndOfFrame();
         }
-        this.gameObject.transform.localPosition = startPosition;
+        camTransfrom.localPosition = startPosition;
     }
 }
